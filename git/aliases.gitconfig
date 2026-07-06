@@ -1,0 +1,41 @@
+# Shared git aliases + color settings.
+# Wired into your global git config by bootstrap.sh via:
+#   git config --global include.path <path-to-this-file>
+# Personal identity ([user] name/email) is intentionally NOT here — set that
+# per-machine with:  git config --global user.name / user.email
+
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	ci = commit
+	ps = push
+	pl = pull
+	cp = cherry-pick
+	sh = stash
+	unstage = reset HEAD --
+	last = log -1 HEAD
+	history = log --pretty=oneline
+	alias = !git config --get-regexp alias
+	b = !git branch | awk \"/^\\\\*/{print $2}\"
+	lg = log --graph --abbrev-commit --decorate --format=format:'%C(cyan)%h%C(reset) - %C(green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(yellow)%d%C(reset)' --all
+
+	# git-flow
+	feat = flow feature start
+	feat-s = flow feature start
+	feat-f = flow feature finish
+	hotfix = flow hotfix start
+	bugfix = flow bugfix start
+	release = flow release start
+	rel = flow release start
+
+	# worktree
+	wt = worktree
+	wtl = worktree list
+	wta = worktree add
+	wtr = worktree remove
+	wtm = worktree move
+	wtp = worktree prune
+
+[color]
+	ui = true

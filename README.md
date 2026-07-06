@@ -1,26 +1,45 @@
 # Claude Code Skills
 
-내 로컬·글로벌 환경(`~/.claude`)에 설치된 [Claude Code Agent Skills](https://docs.claude.com/en/docs/claude-code/skills) 모음과 각 스킬의 설명·다운로드 출처를 정리한 저장소입니다. **개인 FE 에이전트 팩(`fe-agent-pack`)의 스킬·에이전트·커맨드와 설치 스크립트(`install.sh`)도 이 저장소에서 함께 관리됩니다** — 이직해도 `git clone && ./install.sh` 한 번으로 복원되는 포터블 개인 자산.
+이직해도 그대로 들고 다니는 **포터블 개발환경 자산** 저장소입니다. Claude Code 스킬·에이전트·커맨드에 더해, **터미널 설정(zsh)·git alias·에디터(VSCode/Cursor) 확장 목록**까지 한곳에서 관리하고, `bootstrap.sh` 한 번으로 새 머신을 전부 세팅합니다.
 
-- **내 스킬/에이전트/커맨드**는 이 저장소에 실제 파일(`skills/`, `agents/`, `commands/`)로 포함되어 있고, `install.sh`가 `~/.claude`에 심링크합니다.
+- **내 스킬/에이전트/커맨드**는 실제 파일(`skills/`, `agents/`, `commands/`)로 포함되고 `install.sh`가 `~/.claude`에 심링크합니다.
+- **dotfiles / git alias / 에디터 확장**은 `dotfiles/`, `git/`, `editors/`에 포함되고 `bootstrap.sh`가 적용합니다.
 - **서드파티 스킬**은 라이선스·저작권 존중을 위해 파일을 복제하지 않고, 아래 표에 설명과 **다운로드 출처(원본 저장소)** 만 정리했습니다.
-- 출처 근거: `~/.agents/.skill-lock.json`(설치 기록), `~/.claude/plugins/known_marketplaces.json`(플러그인 마켓플레이스). 기준일 2026-07-06.
+- **회사 관련 정보·비밀은 일절 포함하지 않습니다.** 토큰·개인 도메인은 커밋되지 않는 `~/.secrets.zsh`로 분리되며, git 개인 식별정보(user.name/email)도 공유 파일에 넣지 않습니다. 공개 저장소로 유지해도 안전합니다.
 
-## 설치 (내 자산 팩)
+## 한 번에 세팅 (bootstrap)
 
 ```bash
 git clone https://github.com/kangyongseok/skills.git ~/fe-agent-pack
 cd ~/fe-agent-pack
+./bootstrap.sh          # dotfiles + git alias + 에디터 확장 + Claude 자산 전부 세팅
+```
+
+`bootstrap.sh`가 순서대로 수행하는 일:
+1. **dotfiles(zsh)** — `~/.zshrc`·`~/.zprofile`·`~/.p10k.zsh` 심링크 (기존 파일은 `~/.dotfiles-backup-*`로 백업). `~/.secrets.zsh` 템플릿 생성.
+2. **git alias + color** — `git config --global include.path`로 `git/aliases.gitconfig` 연결.
+3. **에디터 확장** — `editors/{vscode,cursor}-extensions.txt`를 `code`/`cursor` CLI로 설치(CLI 없으면 건너뜀).
+4. **Claude 자산** — `install.sh` 실행.
+
+Claude 자산만 따로 설치하려면:
+
+```bash
 ./install.sh                     # ~/.claude/{skills,agents,commands}에 멱등 심링크
 ./uninstall.sh                   # 이 저장소로 향한 링크만 제거
 CLAUDE_HOME=/custom ./install.sh # 커스텀 설정 디렉터리 대상
 ```
 
 - **모델 중립** — 어떤 자산에도 `model:` 하드코딩 없음. 다음 직장의 모델 정책(fable/sonnet/opus …)과 무관하게 작동.
-- **안전** — 무관한 파일·심링크는 절대 건드리지 않고, 재실행은 멱등(no-op).
-- **회사 중립** — 회사 코드·비밀·고유명사 없음. 공개 저장소로 유지해도 안전.
+- **안전·멱등** — 무관한 파일·심링크는 건드리지 않고, 재실행은 no-op이며, 교체 대상은 백업 후 진행.
 
 > `skills/` 아래 서드파티/npm 래퍼 스킬(`react-doctor` 등)도 `install.sh` 대상이 되지만, 이미 실제 디렉터리로 설치돼 있으면 건너뜁니다.
+
+### 첫 로그인 시 시크릿 채우기
+
+```bash
+$EDITOR ~/.secrets.zsh   # SLACK_BOT_TOKEN, VERCEL_BETA_ALIAS 등 머신-로컬 값 입력
+exec zsh                 # 셸 리로드
+```
 
 ---
 
@@ -106,7 +125,11 @@ npx skills add crewaiinc/skills/getting-started
 | `skills/<name>/SKILL.md` | 내 스킬 (실제 파일, `install.sh`로 심링크) |
 | `agents/<name>.md` | 내 에이전트 |
 | `commands/<name>.md` | 내 슬래시 커맨드 |
-| `install.sh` / `uninstall.sh` | 멱등 심링크 설치/제거 (모델 중립·회사 중립) |
+| `dotfiles/` | zsh 설정(`zshrc`·`zprofile`·`p10k.zsh`) + `secrets.zsh.example` 템플릿 |
+| `git/aliases.gitconfig` | git alias + color (개인 식별정보 제외) |
+| `editors/*.txt` | VSCode·Cursor 확장 ID 목록 |
+| `bootstrap.sh` | 전체 환경 한 번에 세팅 |
+| `install.sh` / `uninstall.sh` | Claude 자산 멱등 심링크 설치/제거 (모델 중립·회사 중립) |
 
 ## 스킬 설치 위치 참고
 
