@@ -131,6 +131,8 @@ npx skills add crewaiinc/skills/getting-started
 | `bootstrap.sh` | 전체 환경 한 번에 세팅 |
 | `install.sh` / `uninstall.sh` | Claude 자산 멱등 심링크 설치/제거 (모델 중립·회사 중립) |
 
+개선 백로그(AI 에이전트 실행용 태스크 스펙): [docs/ROADMAP.md](docs/ROADMAP.md)
+
 ## 스킬 설치 위치 참고
 
 | 경로 | 용도 |
